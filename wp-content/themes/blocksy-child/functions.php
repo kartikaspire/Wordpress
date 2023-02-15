@@ -218,6 +218,3 @@ function handle_logo_upload( $value ) {
     }       
     return $value;
 }
-
-
-
