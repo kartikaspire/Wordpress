@@ -189,6 +189,7 @@ function site_name_field($args) {
 }
 
 function admin_form_logo($args) {
+	$value = get_option( 'custom_logo_field' );
 	?>
 	<input type="file" name="logo" />
 	<?php echo get_option('logo'); ?>
@@ -209,7 +210,7 @@ function admin_field_checkbox( $value ) {
 }
 
 function handle_logo_upload( $value ) {
-	if(!empty($_FILES["demo-file"]["tmp_name"]))
+	if(!empty($_FILES["logo"]["tmp_name"]))
     {           
         require_once( ABSPATH . 'wp-admin/includes/file.php' );
         $urls = wp_handle_upload($_FILES["logo"], array('test_form' => false));
