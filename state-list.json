@@ -1,0 +1,14 @@
+[
+	{
+		"school_name": "School1", 
+		"address": "Odisha"
+	},
+	{
+		"school_name": "School2", 
+		"address": "Karnataka"
+	},
+	{
+		"school_name": "School3", 
+		"address": "Delhi"
+	}
+]
