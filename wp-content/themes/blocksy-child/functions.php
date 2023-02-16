@@ -86,21 +86,7 @@ function register_admin_menu() {
 
 // admin form process here
 function custom_setting_form_fields() {
-?>
-
-<div class="wrap">
-			<h1><?php echo get_admin_page_title() ?></h1>
-			<form method="post" action="options.php" enctype="multipart/form-data">
-				<?php
-					settings_fields( 'admin_menu_settings' );
-					do_settings_sections( 'admin_form_form_fields' );
-				?>
-				<?php
-				submit_button();
-				?>
-			</form>
-		</div>
-<?php
+	require_once('includes/admin-setting-custom-form.php');
 }
 
 add_action( 'admin_init',  'admin_menu_settings_fields' );
