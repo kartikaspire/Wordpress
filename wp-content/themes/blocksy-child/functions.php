@@ -75,30 +75,18 @@ function wp_register_param() {
 	$wp->add_query_var('zipcode');
 }
 
+/* Satrt code here for adding custom setting with custom menu*/
 
-add_action('admin_menu', 'register_adminvav_menu');
+// Register admin menu here
+add_action('admin_menu', 'register_admin_menu');
 
-
-function register_adminvav_menu() {
-	$hook_suffix = add_options_page('Custom Settings', 'Custom Settings', 'manage_options', 'custom-setting-menu', 'custom_setting_nav_form_fields', 2);
+function register_admin_menu() {
+	$options_page = add_options_page('Custom Settings', 'Custom Settings', 'manage_options', 'custom-setting-menu', 'custom_setting_form_fields', 2);
 }
 
-function custom_setting_nav_form_fields() {
-?>
-
-<div class="wrap">
-			<h1><?php echo get_admin_page_title() ?></h1>
-			<form method="post" action="options.php" enctype="multipart/form-data">
-				<?php
-					settings_fields( 'admin_menu_settings' );
-					do_settings_sections( 'admin_form_form_fields' );
-				?>
-				<?php
-				submit_button();
-				?>
-			</form>
-		</div>
-<?php
+// admin form process here
+function custom_setting_form_fields() {
+	require_once('includes/admin-setting-custom-form.php');
 }
 
 add_action( 'admin_init',  'admin_menu_settings_fields' );
@@ -108,7 +96,7 @@ function admin_menu_settings_fields(){
 	$page_slug = 'admin_form_form_fields';
 	$option_group = 'admin_menu_settings';
 
-	// 1. create section
+	//create section
 	add_settings_section(
 		'admin_menu_section_id', // section ID
 		'', // title (optional)
@@ -116,19 +104,17 @@ function admin_menu_settings_fields(){
 		$page_slug
 	);
 
-	// register fields
+	//register fields
 	register_setting( $option_group, 'custom_setting_checkbox', 'admin_field_checkbox' );
 	register_setting( $option_group, 'site_url_field', '' );
 	register_setting( $option_group, "logo", "handle_logo_upload" ); 
 	register_setting( $option_group, 'site_name_field', '' );
 	
 
-	// add fields
-	
-
+	// add fields for site_url
 	add_settings_field(
 		'site_url_field',
-		'Site Url',
+		'Site URL',
 		'url_field',
 		$page_slug,
 		'admin_menu_section_id',
@@ -139,6 +125,7 @@ function admin_menu_settings_fields(){
 		)
 	);
 	
+	// add fields for site_name
 	add_settings_field(
 		'site_name_field',
 		'Site Name',
@@ -152,6 +139,7 @@ function admin_menu_settings_fields(){
 		)
 	);
 	
+	// add fields for logo
 	add_settings_field(
 		'custom_logo_field',
 		'Logo',
@@ -160,6 +148,7 @@ function admin_menu_settings_fields(){
 		'admin_menu_section_id'
 	);
 	
+	// add fields for custom_setting_checkbox
 	add_settings_field(
 		'custom_setting_checkbox',
 		'Use Custom Settings',
@@ -170,6 +159,7 @@ function admin_menu_settings_fields(){
 
 }
 
+// function for site_url field
 function url_field( $args ){
 	printf(
 		'<input type="text" id="%s" name="%s" value="%s" />',
@@ -179,6 +169,7 @@ function url_field( $args ){
 	);
 }
 
+// function for site_name field
 function site_name_field($args) {
 	printf(
 		'<input type="text" id="%s" name="%s" value="%s" />',
@@ -188,13 +179,16 @@ function site_name_field($args) {
 	);
 }
 
+// function for logo field
 function admin_form_logo($args) {
+	$value = get_option( 'custom_logo_field' );
 	?>
 	<input type="file" name="logo" />
-	<?php echo get_option('logo'); ?>
+	<img src="<?php echo get_option('logo'); ?>" height="100px" width="100px" />
 	<?php
 }
 
+// function for checkbox field
 function admin_form_checkbox( $args ) {
 	$value = get_option( 'custom_setting_checkbox' );
 	?>
@@ -204,12 +198,14 @@ function admin_form_checkbox( $args ) {
 	<?php
 }
 
+// function for getting checkbox value
 function admin_field_checkbox( $value ) {
 	return 'on' === $value ? 'yes' : 'no';
 }
 
+// function to handle the logo upload
 function handle_logo_upload( $value ) {
-	if(!empty($_FILES["demo-file"]["tmp_name"]))
+	if(!empty($_FILES["logo"]["tmp_name"]))
     {           
         require_once( ABSPATH . 'wp-admin/includes/file.php' );
         $urls = wp_handle_upload($_FILES["logo"], array('test_form' => false));
@@ -218,6 +214,3 @@ function handle_logo_upload( $value ) {
     }       
     return $value;
 }
-
-
-
